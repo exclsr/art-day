@@ -16,7 +16,12 @@ while (y < 256) {
 		.attr('fillColor', '#' + 
 			toHex(y) + 
 			toHex(y - i * 0.2) + 
-			toHex(y));
+			toHex(y))
+		.animate('1.5s', {
+  			rotation: Math.PI,
+  			x: 1400 - i,
+  			fillColor: '#dd0000'
+		});
 	}
-	y++;
+	y+=10;
 }
