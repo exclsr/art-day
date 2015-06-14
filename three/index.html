@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>three</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="physicsjs-full.min.js"></script>
+		<script>
+$(function() {
+	Physics(function (world) {
+
+		var renderer = Physics.renderer('canvas', {
+		    el: 'viewport', // id of the canvas element
+		    width: 800,
+		    height: 500,
+		    autoResize: false
+		});
+		
+		world.add(renderer);
+
+		// Bodies ...
+		var square = Physics.body('rectangle', {
+		    x: 250,
+		    y: 250,
+		    vx: 0.01,
+		    width: 50,
+		    height: 50
+		});
+		world.add(square);
+
+		world.on('step', function(){
+    		world.render();
+		});
+
+		// Gravity ...
+		world.add(Physics.behavior('constant-acceleration') );
+
+		// Bounds ...
+		var bounds = Physics.aabb(0, 0, 800, 500);
+		world.add(Physics.behavior('edge-collision-detection', {
+    		aabb: bounds,
+    		restitution: 1.2 // ...
+		}));
+
+		// Bouncing of bodies
+		world.add( Physics.behavior('body-impulse-response') );
+
+		// Collide the bodies
+		world.add( Physics.behavior('body-collision-detection') );
+		world.add( Physics.behavior('sweep-prune') );
+
+		// subscribe to ticker to advance the simulation
+		Physics.util.ticker.on(function (time, dt) {
+		    world.step(time);
+		});
+
+		// start the ticker
+		Physics.util.ticker.start();
+	});
+});
+		</script>
+		<style>
+			#viewport {
+				border: dashed 1px #ccc;
+			}
+		</style>
+	</head>
+	<body>
+			<canvas id="viewport" width="800" height="500"></canvas>
+	</body>
+</html>
